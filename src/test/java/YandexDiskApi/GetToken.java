@@ -1,10 +1,10 @@
+//1. Получить токен
 package YandexDiskApi;
 
 import io.restassured.http.ContentType;
 import org.testng.annotations.Test;
-
 import static io.restassured.RestAssured.given;
-import static io.restassured.authentication.FormAuthConfig.springSecurity;
+
 
 public class GetToken {
     @Test
