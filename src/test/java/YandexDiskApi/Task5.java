@@ -1,30 +1,26 @@
+/*1. Создать папку test
+2. Внутри test создать папку foo
+3. Внутри foo создать файл autotest
+4. Получить метаданные test и сравнить что и тип параметров соответсвует ожидаемому
+5. Удалить папку тест
+6. Проверить ,что удалилась папку test, foo и файл autotest
+
+*/
 package YandexDiskApi;
-/*Получить информацию и диске пользователя
-1. Создать папку на яндекс диске
-2. Внутри созданной папки создать несколько файлов
-3. Поместить созданные файлы в корзину
-4. Посчитать размер файлов в корзине
-5. Сравнить что файлов в корзине = первоначальному разрамеру + размеру файлов в корзине
-4. Восстановить созданный файл из корзины
-5. Удалить файл и папку*/
 
-
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.Test;
 
 public class Task5 {
     @Test
-    public static void task3() {
+    public static void task5() {
         RestApiManager restApiManager = new RestApiManager();
-
         restApiManager.createFolder();
-        restApiManager.makeFile1();
-        restApiManager.makeFile2();
-        restApiManager.makeFile3();
-        restApiManager.deleteFile1();
-        restApiManager.deleteFile2();
-        restApiManager.deleteFile3();
-        restApiManager.getInfoAboutDiskUser();
-
-
+        restApiManager.createFolderInFolder();
+        restApiManager.createFileInFolder();
+        restApiManager.getMetaInfoFolder();
+        restApiManager.deleteFolder();
+        restApiManager.getTrashInfo();
     }
+
 }

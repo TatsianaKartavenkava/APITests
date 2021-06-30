@@ -7,11 +7,12 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
 
 public class GetFilms {
+    private static String baseUrl = "https://swapi.dev/api/planets/";
 
     @Test
     public static void getFilms() {
         List<Object> title = given().log().everything()
-                .baseUri("https://swapi.dev/api/films/")
+                .baseUri(baseUrl)
                 .contentType(ContentType.JSON)
                 .when().get()
                 .then().log().everything()

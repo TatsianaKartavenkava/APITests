@@ -9,7 +9,7 @@ import static org.hamcrest.Matchers.is;
 
 public class GetResponseUrl {
     @Test
-    public static void GetResponseHeaders() {
+    public static void getResponseHeaders() {
         given().log().everything()
                 .baseUri("https://swapi.dev/api/planets/")
                 .contentType(ContentType.JSON)
