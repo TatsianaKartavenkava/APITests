@@ -10,7 +10,6 @@ package YandexDiskApi;
 
 import org.testng.annotations.Test;
 
-
 public class Task6 {
     @Test
     public static void task6() {
