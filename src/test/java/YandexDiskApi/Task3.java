@@ -15,8 +15,9 @@ public class Task3 {
         restApiManager.createFolder();
         restApiManager.makeFile1();
         restApiManager.deleteFile1();
-        restApiManager.trashRestore();//фейлится, потому что новый удаленный файд со своим id
-        restApiManager.deleteFolder();
+        restApiManager.trashRestoreFile();
+        restApiManager.deleteFolderWithFiles();
+        restApiManager.cleanTrashIfNotEmpty();
     }
 
 }

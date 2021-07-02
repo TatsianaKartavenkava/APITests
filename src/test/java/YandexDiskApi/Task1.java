@@ -1,7 +1,6 @@
 /*1. Создать папку на диске
 2. Удалить созданную папку
 3. Проверить, что папку удалена
-Чтобы включить программу чтения с экрана, нажмите Ctrl+Alt+Z. Для просмотра списка быстрых клавиш нажмите Ctrl+косая черта.
 */
 package YandexDiskApi;
 
@@ -14,5 +13,6 @@ public class Task1 {
         restApiManager.createFolder();
         restApiManager.deleteFolder();
         restApiManager.getFolder();
+
     }
 }

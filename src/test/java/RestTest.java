@@ -22,7 +22,7 @@ public class RestTest {
                 .then().log().everything()
                 .assertThat()
                 .statusCode(200)
-                .body("count", is(61));
+                .body("count", is(60));
 
 
     }

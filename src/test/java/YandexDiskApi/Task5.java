@@ -18,8 +18,9 @@ public class Task5 {
         restApiManager.createFolderInFolder();
         restApiManager.createFileInFolder();
         restApiManager.getMetaInfoFolder();
-        restApiManager.deleteFolder();
+        restApiManager.deleteFolderWithFiles();
         restApiManager.getTrashInfo();
+        restApiManager.cleanTrashIfNotEmpty();
     }
 
 }

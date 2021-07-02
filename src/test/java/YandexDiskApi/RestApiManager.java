@@ -1,20 +1,26 @@
 package YandexDiskApi;
 
+import Pojo.ResponseTrash;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
-import io.restassured.path.json.JsonPath;
-import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.mortbay.util.ajax.JSON;
-import org.testng.annotations.Test;
 
-import static io.restassured.authentication.FormAuthConfig.springSecurity;
+import java.util.List;
+
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 public class RestApiManager {
     RequestSpecification requestSpecification = new RequestSpecBuilder()
             .setBaseUri("https://cloud-api.yandex.net/v1/disk/resources")
+            .setContentType(ContentType.JSON)
+            .setAccept(ContentType.JSON)
+            .addHeader("Authorization", "OAuth AQAAAABJI-t8AADLW7V6UElizkOIq5LZGXXbeCA")
+            .build();
+
+    RequestSpecification requestSpecificationTrash = new RequestSpecBuilder()
+            .setBaseUri("https://cloud-api.yandex.net/v1/disk/trash/resources")
             .setContentType(ContentType.JSON)
             .setAccept(ContentType.JSON)
             .addHeader("Authorization", "OAuth AQAAAABJI-t8AADLW7V6UElizkOIq5LZGXXbeCA")
@@ -60,6 +66,14 @@ public class RestApiManager {
                 .queryParam("path", "/Test")
                 .when().delete()
                 .then().log().everything().assertThat().statusCode(204);
+    }
+
+    public void deleteFolderWithFiles() {
+        RestAssured.given().log().everything()
+                .spec(requestSpecification)
+                .queryParam("path", "/Test")
+                .when().delete()
+                .then().log().everything().assertThat().statusCode(202);
     }
 
     public void getMetaInfoFolder() {
@@ -115,44 +129,59 @@ public class RestApiManager {
     public void getSumSizeFiles() {
         RestAssured.given().log().everything()
                 .baseUri("https://cloud-api.yandex.net/v1/disk/trash/resources")
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
-                .header("Authorization", "OAuth AQAAAABJI-t8AADLW7V6UElizkOIq5LZGXXbeCA")
+                .spec(requestSpecificationTrash)
                 .queryParam("path", "/")
                 .when().get()
                 .then().log().everything().log();
 
     }
 
-    public void trashRestore() {
+    public void trashRestoreFolderWithFile() {
         RestAssured.given().log().everything()
-                .baseUri("https://cloud-api.yandex.net/v1/disk/trash/resources/restore")
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
-                .header("Authorization", "OAuth AQAAAABJI-t8AADLW7V6UElizkOIq5LZGXXbeCA")
-                .queryParam("path", "trash:/kill.png_f54b408d8f6826fcdb6a115554ea3c41bba1e15f")
+                .spec(requestSpecificationTrash)
+                .basePath("/restore")
+                .queryParam("path", getPathTrash())
+                .when().put()
+                .then().log().everything().assertThat().statusCode(202);
+    }
+
+    public void trashRestoreFile() {
+        RestAssured.given().log().everything()
+                .spec(requestSpecificationTrash)
+                .basePath("/restore").queryParam("path", getPathTrash())
                 .when().put()
                 .then().log().everything().assertThat().statusCode(201);
     }
 
+
     public void getTrashInfo() {
         RestAssured.given().log().everything()
-                .baseUri("https://cloud-api.yandex.net/v1/disk/trash/resources")
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
-                .header("Authorization", "OAuth AQAAAABJI-t8AADLW7V6UElizkOIq5LZGXXbeCA")
-                .queryParam("path", "trash:/Test_74ab42bd100f9ff3f7166a0768f05a4ec4156769")
+                .spec(requestSpecificationTrash)
+                .queryParam("path", getPathTrash())
                 .when().get()
                 .then().log().everything().assertThat().statusCode(200)
                 .body("name", is("Test"));
     }
 
-    public void cleanTrash() {
+    public void getTrashCleanInfo() {
         RestAssured.given().log().everything()
-                .baseUri("https://cloud-api.yandex.net/v1/disk/trash/resources")
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
-                .header("Authorization", "OAuth AQAAAABJI-t8AADLW7V6UElizkOIq5LZGXXbeCA")
+                .spec(requestSpecificationTrash)
+                .queryParam("path", "/")
+                .when().get()
+                .then().log().everything().assertThat().statusCode(200);
+    }
+
+    public void cleanTrashIfEmpty() {
+        RestAssured.given().log().everything()
+                .spec(requestSpecificationTrash)
+                .queryParam("path", "/")
+                .when().delete()
+                .then().log().everything().assertThat().statusCode(204);
+    }
+
+    public void cleanTrashIfNotEmpty() {
+        RestAssured.given().log().everything()
+                .spec(requestSpecificationTrash)
                 .queryParam("path", "/")
                 .when().delete()
                 .then().log().everything().assertThat().statusCode(202);
@@ -160,13 +189,47 @@ public class RestApiManager {
 
     public void getCleanTrash() {
         RestAssured.given().log().everything()
-                .baseUri("https://cloud-api.yandex.net/v1/disk/trash/resources")
-                .contentType(ContentType.JSON)
-                .accept(ContentType.JSON)
-                .header("Authorization", "OAuth AQAAAABJI-t8AADLW7V6UElizkOIq5LZGXXbeCA")
+                .spec(requestSpecificationTrash)
                 .queryParam("path", "/")
                 .when().get()
                 .then().log().everything().assertThat().statusCode(200)
                 .body("_embedded.total", equalTo(0));
     }
+
+    public void countTotalInTrashEmpty() {
+        RestAssured.given().log().everything()
+                .spec(requestSpecificationTrash)
+                .queryParam("path", "/")
+                .when().get()
+                .then().log().everything().assertThat().statusCode(200)
+                .body("_embedded.total", equalTo(0));
+    }
+
+    public void countTotalInTrashNotEmpty() {
+        RestAssured.given().log().everything()
+                .spec(requestSpecificationTrash)
+                .queryParam("path", "/")
+                .when().get()
+                .then().log().everything().assertThat().statusCode(200)
+                .body("_embedded.total", equalTo(2));
+
+    }
+
+    public String getPathTrash() {
+        List<ResponseTrash> getPathTrash =
+                given().log().everything()
+                        .spec(requestSpecificationTrash)
+                        .when().get()
+                        .then().log().everything()
+                        .assertThat().statusCode(200)
+                        .extract().jsonPath().getList("_embedded.items",ResponseTrash.class);
+        return getPathTrash.get(0).path;
+
+    }
+
 }
+
+
+
+
+

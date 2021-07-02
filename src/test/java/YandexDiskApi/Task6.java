@@ -17,8 +17,9 @@ public class Task6 {
         restApiManager.createFolder();
         restApiManager.createFolderInFolder();
         restApiManager.createFileInFolder();
-        restApiManager.deleteFolder();
-        restApiManager.cleanTrash();
+        restApiManager.deleteFolderWithFiles();
+        restApiManager.cleanTrashIfNotEmpty();
+        restApiManager.getTrashCleanInfo();
         restApiManager.getCleanTrash();
     }
 }
