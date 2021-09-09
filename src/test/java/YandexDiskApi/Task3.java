@@ -1,4 +1,5 @@
 package YandexDiskApi;
+
 /*1. Создать папку на яндекс диске
 2. Внутри созданной папки создать файл
 3. Поместить созданный файл в корзину
@@ -6,12 +7,16 @@ package YandexDiskApi;
 5. Удалить файл и папку
 */
 
+
 import org.testng.annotations.Test;
 
 public class Task3 {
     @Test
     public static void task3() {
         RestApiManager restApiManager = new RestApiManager();
+        restApiManager.makeFiles();
+        restApiManager.deleteFile();
+        restApiManager.deleteFolder();
         restApiManager.createFolder();
         restApiManager.makeFile1();
         restApiManager.deleteFile1();
@@ -19,5 +24,6 @@ public class Task3 {
         restApiManager.deleteFolderWithFiles();
         restApiManager.cleanTrashIfNotEmpty();
     }
+
 
 }
